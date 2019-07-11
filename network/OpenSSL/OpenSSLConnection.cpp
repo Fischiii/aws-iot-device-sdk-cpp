@@ -79,7 +79,7 @@ namespace awsiotsdk {
             initializer = OpenSSLInitializer::getInstance();
             p_ssl_handle_ = nullptr;
             enable_alpn_ = false;
-            address_family_ = AF_INET;
+            address_family_ = AF_INET6;
         }
 
         OpenSSLConnection::OpenSSLConnection(util::String endpoint,
@@ -266,7 +266,12 @@ namespace awsiotsdk {
                 }
 
                 char straddr[INET6_ADDRSTRLEN];
-                inet_ntop(address_family_, addressPointer, straddr, sizeof(straddr));
+                if (address_family_ == AF_INET6) {
+                    inet_ntop(AF_INET6, &dest_addr6.sin6_addr, straddr, sizeof(straddr));
+                } else {
+                    inet_ntop(AF_INET, &dest_addr.sin_addr, straddr, sizeof(straddr));
+                }
+//                inet_ntop(address_family_, addressPointer, straddr, sizeof(straddr));
                 AWS_LOG_INFO(OPENSSL_WRAPPER_LOG_TAG, "resolved %s to %s", endpoint_.c_str(), straddr);
 
                 connect_status = connect(server_tcp_socket_fd_, sock_addr, socketLength);

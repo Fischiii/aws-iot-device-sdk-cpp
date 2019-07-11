@@ -225,6 +225,7 @@ namespace awsiotsdk {
             if (address_family_ == AF_INET6) {
                 dest_addr6.sin6_family = AF_INET6;
                 dest_addr6.sin6_port = htons(endpoint_port_);
+                memset(&dest_addr6, 0, sizeof(struct sockaddr_in6));
             } else {
                 dest_addr.sin_family = AF_INET;
                 dest_addr.sin_port = htons(endpoint_port_);
@@ -266,12 +267,7 @@ namespace awsiotsdk {
                 }
 
                 char straddr[INET6_ADDRSTRLEN];
-                if (address_family_ == AF_INET6) {
-                    inet_ntop(AF_INET6, &dest_addr6.sin6_addr, straddr, sizeof(straddr));
-                } else {
-                    inet_ntop(AF_INET, &dest_addr.sin_addr, straddr, sizeof(straddr));
-                }
-//                inet_ntop(address_family_, addressPointer, straddr, sizeof(straddr));
+                inet_ntop(address_family_, addressPointer, straddr, sizeof(straddr));
                 AWS_LOG_INFO(OPENSSL_WRAPPER_LOG_TAG, "resolved %s to %s", endpoint_.c_str(), straddr);
 
                 connect_status = connect(server_tcp_socket_fd_, sock_addr, socketLength);

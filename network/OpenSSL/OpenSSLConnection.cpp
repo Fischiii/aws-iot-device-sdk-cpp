@@ -79,7 +79,7 @@ namespace awsiotsdk {
             initializer = OpenSSLInitializer::getInstance();
             p_ssl_handle_ = nullptr;
             enable_alpn_ = false;
-            address_family_ = AF_INET6;
+            address_family_ = AF_INET;
         }
 
         OpenSSLConnection::OpenSSLConnection(util::String endpoint,
